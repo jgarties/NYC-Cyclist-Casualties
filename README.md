@@ -2,7 +2,7 @@
 ## Introduction
 I performed this analysis as part of the [Transportation Data Science Project (TDSP)](https://nebigdatahub.org/nsdc/tdsp/), which provides self-paced instruction on the basics of python and data science using a New York City OpenData transportation dataset on car crashes. The project culminates with participants selecting and original research question, conducting data analysis to answer the question, and creating a poster to present their findings.
 
-I decided to examine cyclist causialties (i.e., injuries and fatalities) before and after the COVID-19 pandemic to identify trends that the pandemic may have caused and recommend actions to address them. This repo contains a python notebook with the code for my analysis and my research poster. This readme walks through the code.
+I decided to examine cyclist causialties (i.e., injuries and fatalities) before and after the COVID-19 pandemic to identify trends that the pandemic may have caused and recommend actions to address them. This repo contains a [python notebook](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/NYC-Cyclist-Casualties.ipynb) with the code for my analysis and my [research poster](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/Poster_NYC-Cyclist-Casualties_jgarties.pdf). This readme walks through the code.
 ## Load Data
 This analysis uses the NYC OpenData Motor Vehicles Collisions - Crashes dataset. Click the Export button on the page to download a csv. 
 
