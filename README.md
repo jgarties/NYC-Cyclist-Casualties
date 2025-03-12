@@ -79,3 +79,4 @@ Studying these results, we can observe the following:
 - The _rate_ of cyclists injured per year jumped in 2020 and generally _increased_ through 2024
 - The _rate_ of cyclists killed per year jumped in 2020 and fluctuated through 2024
 
+![summary of crashes, cyclist injuries, and cyclist fatalities, 2017-2024](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/summay_by_year.png?raw=true "Sumary by Year")
