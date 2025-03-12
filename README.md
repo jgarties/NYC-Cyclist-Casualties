@@ -153,10 +153,10 @@ This produes the following two charts:
 
 ![combo chart showing the number and rate of cyclists killed, 2014-2017](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/cyclists_killed_combo_chart.png?raw=true "Number and Rate of Cyclists Killed")
 
-## Map Cyclist Casualties Before and After the Pandemic
+## Heatmapping Cyclist Casualties Before and After the Pandemic
 So far, we have seen an increase in the rate of cyclists killed and injured since 2020. This suggests that something about the change in travel patterns since the pandemic has caused a higher rate of cyclist casualties. Did these new travel patters affect _where_ crashes injured and killed cyclists? We can use heatmapping to find out.
 
-We will create two heatmaps of crashes that killed and injured cyclists: one from 2017-2019, and one from 2022-2024. I selected these timeframes because they each provide three years of data to represent "pre-pandemc" and "post-pandemic" crashes. I omit the years 2020 and 2021 because they represent the greatest periods of pandemic disruption, while 2022 onward best represents the post-pandemic "new normal."
+Returning to the full unsummarized dataset, we will create two heatmaps of crashes that killed and injured cyclists: one from 2017-2019, and one from 2022-2024. I selected these timeframes because they each provide three years of data to represent "pre-pandemc" and "post-pandemic" crashes. I omit the years 2020 and 2021 because they represent the greatest periods of pandemic disruption, while 2022 onward best represents the post-pandemic "new normal."
 
 Heatmap for 2017-2019:
 ```python
@@ -181,12 +181,6 @@ cyc_17_19.save("cyc_heatmap_2017_2019.html")
 ```
 Heatmap for 2022-2024:
 ```python
-# IF NOT PERFORMED ABOVE: Drop rows with missing latitude and longitude values
-# data_geo = data.dropna(subset=['LATITUDE', 'LONGITUDE'])
-
-# IF NOT PERFORMED ABOVE: Drop rows where no cyclist was killed or injured
-# data_cyc = data_geo[(data_geo['NUMBER OF CYCLIST KILLED'] > 0) | (data_geo['NUMBER OF CYCLIST INJURED'] > 0)]
-
 # Filter rows for desired years
 data_cyc_22_24 = data_cyc[(data_cyc['CRASH DATE'] >= '2022-01-01') & (data_cyc['CRASH DATE'] <= '2024-12-31')]
 
@@ -200,19 +194,44 @@ HeatMap(heat_cyc, radius=8, max_zoom=13).add_to(cyc_22_24)
 # Save the map
 cyc_22_24.save("cyc_heatmap_2022_2024.html")
 ```
-The resulting heatmaps show that pre-pandemic cyclist casualties were concentrated in Midtown and Lower Manhattan. Post-pandemic, they are more broadly distributed across the boroughs. 
+The resulting heatmaps show that pre-pandemic cyclist casualties were concentrated in Midtown and Lower Manhattan. Post-pandemic, they are more broadly distributed across the boroughs. Can we use this dataset to learn more about some of the post-pandemic hot spots?
+## Mapping Post-Pandemic Hotspots
+The datast provides the latitude and longitude of crashes, allowing us to map precisely where crashes that injured or killed cyclists occurred to search for insights. However, while heatmapping can help us draw insights from a large amount of data, the sheer number of crashes in our dataset makes it challenging to learn anything from examing all crashes with cyclist casualties.
+
+For example, this map of cyclist casualties from 2022-2024 uses yellow circles to mark the location of crashes that injured cyclists, and red triangles to mark the location of crashes that killed cyclists. Even focusing on a small area like Williamsburg shows that there is too much data to gain useful insights.
+```python
+# Create a base map
+cyc_casualty_22_24 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
+
+# Add polygons for cyclist fatalities to map
+for index, row in data_cyc_22_24.iterrows():
+    if row['NUMBER OF CYCLIST KILLED'] > 0:
+      color = "red"
+      folium.features.RegularPolygonMarker(
+          location=[row['LATITUDE'], row['LONGITUDE']],
+          number_of_sides=3,
+          radius=5,
+          gradient = False,
+          color=color,
+          fill=True,
+          fill_color=color
+        ).add_to(cycfatality_22_24)
+    elif row['NUMBER OF CYCLIST INJURED'] > 0:
+      color = "yellow"
+      folium.CircleMarker(
+          location=[row['LATITUDE'], row['LONGITUDE']],
+          radius=5,
+          color=color,
+          fill=True,
+          fill_color=color
+       ).add_to(cycfatality_22_24)
+
+# Save the map
+cyc_casualty_22_24.save("cyc_fatalities_2022_2024.html")
+```
 
 
 ```python
-# IF NOT PERFORMED ABOVE: Drop rows with missing latitude and longitude values
-# data_geo = data.dropna(subset=['LATITUDE', 'LONGITUDE'])
-
-# IF NOT PERFORMED ABOVE: Drop rows with missing latitude and longitude values
-# data_cyc = data_geo[(data_geo['NUMBER OF CYCLIST KILLED'] > 0) | (data_geo['NUMBER OF CYCLIST INJURED'] > 0)]
-
-# IF NOT PERFORMED ABOVE: Filter rows for desired years
-# data_cyc_22_24 = data_cyc[(data_cyc['CRASH DATE'] >= '2022-01-01') & (data_cyc['CRASH DATE'] <= '2024-12-31')]
-
 # Create a base map
 cycfatality_22_24 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
 
