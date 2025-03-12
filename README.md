@@ -80,7 +80,7 @@ Studying these results, we can observe the following:
 - The _rate_ of cyclists killed per year jumped in 2020 and fluctuated through 2024
 
 ![summary of crashes, cyclist injuries, and cyclist fatalities, 2017-2024](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/summay_by_year.png?raw=true "Sumary by Year")
-## Plot Crashes and Cyclist Casualties
+## Visualize Number of Crashes and Cyclist Casualties
 We will visualize these results to help make more sense of them.
 First, we will visualize the number of crashes per year, which shows the downward trend we observed.
 ```python
@@ -96,7 +96,7 @@ plt.tight_layout()
 
 plt.show()
 ```
-
+![bar chart showing the total number of crashes per year](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/crashes_per_year.png?raw=true "Crashes per Year")
 
 We will use two combo charts to visualize the trends in the number and rate of cyclists killed and injured. These charts will combine a bar chart of crashes injuring/killing cyclists using the left y-axis with a superimposed line chart of the rate of cyclists injured/killed using the right y-axis.
 
@@ -152,3 +152,52 @@ This produes the following two charts:
 ![combo chart showing the number and rate of cyclists injured, 2014-2017](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/cyclists_injured_combo_chart.png?raw=true "Number and Rate of Cyclists Injured")
 
 ![combo chart showing the number and rate of cyclists killed, 2014-2017](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/cyclists_killed_combo_chart.png?raw=true "Number and Rate of Cyclists Killed")
+
+## Map Cyclist Casualties Before and After the Pandemic
+So far, we have seen an increase in the rate of cyclists killed and injured since 2020. This suggests that something about the change in travel patterns since the pandemic has caused a higher rate of cyclist casualties. Did these new travel patters affect _where_ crashes injured and killed cyclists? We can use heatmapping to find out.
+
+We will create two heatmaps of crashes that killed and injured cyclists: one from 2017-2019, and one from 2022-2024. I selected these timeframes because they each provide three years of data to represent "pre-pandemc" and "post-pandemic" crashes. I omit the years 2020 and 2021 because they represent the greatest periods of pandemic disruption, while 2022 onward best represents the post-pandemic "new normal."
+
+Heatmap for 2017-2019:
+```python
+# Drop rows with missing latitude and longitude values
+data_geo = data.dropna(subset=['LATITUDE', 'LONGITUDE'])
+
+# Drop rows where no cyclist was killed or injured
+data_cyc = data_geo[(data_geo['NUMBER OF CYCLIST KILLED'] > 0) | (data_geo['NUMBER OF CYCLIST INJURED'] > 0)]
+
+# Filter rows for desired years
+data_cyc_17_19 = data_cyc[(data_cyc['CRASH DATE'] >= '2017-01-01') & (data_cyc['CRASH DATE'] <= '2019-12-31')]
+
+# Create a base map
+cyc_17_19 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
+
+# Add heatmap
+heat_cyc = [[row['LATITUDE'], row['LONGITUDE']] for index, row in data_cyc_17_19.iterrows()]
+HeatMap(heat_cyc, radius=8, max_zoom=13).add_to(cyc_17_19)
+
+# Save the map
+cyc_17_19.save("cyc_heatmap_2017_2019.html")
+```
+Heatmap for 2022-2024:
+```python
+# IF NOT PERFORMED ABOVE: Drop rows with missing latitude and longitude values
+# data_geo = data.dropna(subset=['LATITUDE', 'LONGITUDE'])
+
+# IF NOT PERFORMED ABOVE: Drop rows where no cyclist was killed or injured
+# data_cyc = data_geo[(data_geo['NUMBER OF CYCLIST KILLED'] > 0) | (data_geo['NUMBER OF CYCLIST INJURED'] > 0)]
+
+# Filter rows for desired years
+data_cyc_22_24 = data_cyc[(data_cyc['CRASH DATE'] >= '2022-01-01') & (data_cyc['CRASH DATE'] <= '2024-12-31')]
+
+# Create a base map
+cyc_22_24 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
+
+# Add heatmap
+heat_cyc = [[row['LATITUDE'], row['LONGITUDE']] for index, row in data_cyc_22_24.iterrows()]
+HeatMap(heat_cyc, radius=8, max_zoom=13).add_to(cyc_22_24)
+
+# Save the map
+cyc_22_24.save("cyc_heatmap_2022_2024.html")
+```
+The resulting heatmaps show that pre-pandemic cyclist casualties were concentrated in Midtown and Lower Manhattan. Post-pandemic, they are more broadly distributed across the boroughs. 
