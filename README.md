@@ -194,11 +194,13 @@ HeatMap(heat_cyc, radius=8, max_zoom=13).add_to(cyc_22_24)
 # Save the map
 cyc_22_24.save("cyc_heatmap_2022_2024.html")
 ```
-The resulting heatmaps show that pre-pandemic cyclist casualties were concentrated in Midtown and Lower Manhattan. Post-pandemic, they are more broadly distributed across the boroughs. Can we use this dataset to learn more about some of the post-pandemic hot spots?
+![two heatmaps of cyclist casualties across New York City, one from 2017-2019 and one from 2022-2024](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/heatmaps.png?raw=true "Heatmaps of Cyclist Casualties")
+
+The resulting heatmaps show that pre-pandemic (2017-2019, left) cyclist casualties were concentrated in Midtown and Lower Manhattan. Post-pandemic (2022-2024, right), they are more broadly distributed across the boroughs. Can we use this dataset to learn more about some of the post-pandemic hot spots?
 ## Mapping Post-Pandemic Hotspots
 The datast provides the latitude and longitude of crashes, allowing us to map precisely where crashes that injured or killed cyclists occurred to search for insights. However, while heatmapping can help us draw insights from a large amount of data, the sheer number of crashes in our dataset makes it challenging to learn anything from examing all crashes with cyclist casualties.
 
-For example, this map of cyclist casualties from 2022-2024 uses yellow circles to mark the location of crashes that injured cyclists, and red triangles to mark the location of crashes that killed cyclists. Even focusing on a small area like Williamsburg shows that there is too much data to gain useful insights.
+For example, this map of cyclist casualties from 2022-2024 uses yellow circles to mark the location of crashes that injured cyclists and red triangles to mark the location of crashes that killed cyclists. Even focusing on a small area like Williamsburg shows that there is too much data to gain useful insights.
 ```python
 # Create a base map
 cyc_casualty_22_24 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
@@ -253,8 +255,8 @@ for index, row in data_cyc_22_24.iterrows():
 # Save the map
 cyc_fatality_22_24.save("cyc_fatalities_2022_2024.html")
 ```
-Examining two of the hotspots--Williamsburg/Long Island City and Downtown Flushing--we can see that many of the fatalities from 2022-2024 appeared near expressways.
-![map of Williamsburg/Long Island City and Downtown Flushing with cyclist fatalities marked](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/fatality_maps.png?raw=true"Williamsbur/LIC and Downtown Flushing Fatalities")
+Examining two of the hotspots--Williamsburg/Long Island City (left) and Downtown Flushing (right)--we can see that many of the fatalities from 2022-2024 appeared near expressways.
+![maps of Williamsburg and Long Island City and Downtown Flushing with cyclist fatalities marked](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/fatality_maps.png?raw=true "Williamsburg LIC and Downtown Flushing Fatalities")
 ## Conclusion
 Further research targeting areas where cyclist casualties increased post-pandemic could determine the causes of these crashes and identify solutions. Causes may include traffic volume, vehicle speed, road design, and driver and cyclist behavior. 
 Depending on the causes, the City could implement solutions near expressways such as re-engineering roads, increasing enforcement (including automated traffic enforcement), and building protected cycling infrastructure.
