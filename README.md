@@ -96,6 +96,8 @@ plt.tight_layout()
 
 plt.show()
 ```
+
+
 We will use two combo charts to visualize the trends in the number and rate of cyclists killed and injured. These charts will combine a bar chart of crashes injuring/killing cyclists using the left y-axis with a superimposed line chart of the rate of cyclists injured/killed using the right y-axis.
 
 Cyclist injuries:
@@ -147,4 +149,6 @@ plt.show()
 ```
 This produes the following two charts:
 
+![combo chart showing the number and rate of cyclists injured, 2014-2017](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/cyclists_injured_combo_chart.png?raw=true "Number and Rate of Cyclists Injured")
 
+![combo chart showing the number and rate of cyclists killed, 2014-2017](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/cyclists_killed_combo_chart.png?raw=true "Number and Rate of Cyclists Killed")
