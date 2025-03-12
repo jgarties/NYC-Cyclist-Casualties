@@ -28,3 +28,20 @@ data = pd.read_csv('filepath') # Replace filepath with the path to your csv
 # View the column headers and the first five rows of the dataset
 data.head(5)
 ```
+This is my dataset's head. Yours may look different depending on when you downloaded the csv, but the column headers should be the same.
+
+![dataset head](https://raw.githubusercontent.com/jgarties/NYC-Cyclist-Casualties/refs/heads/main/screenshots/dataset_head.png)
+## Check for Missing Values
+A large number of missing values could affect our ability to analyze this data. This code returns a table showing the number of missing values for each column and the percent of the total values the missing values represent.
+```python
+# Find the number of missing values in each column
+missing_values = data.isnull().sum()
+
+# Calculate percentages of missing values
+missing_values_percentage = (missing_values / len(data)) * 100
+
+# Return counts and percentages of missing values in each column
+missing_data = pd.DataFrame({'Missing Values': missing_values, 'Percentage (%)': missing_values_percentage})
+missing_data.sort_values(by='Percentage (%)', ascending=False)
+```
+The table is below, with columns we will use in this analysis highlighted. Because these columns either have no missing values or a small percentage of missing values, we can proceed.
