@@ -201,3 +201,35 @@ HeatMap(heat_cyc, radius=8, max_zoom=13).add_to(cyc_22_24)
 cyc_22_24.save("cyc_heatmap_2022_2024.html")
 ```
 The resulting heatmaps show that pre-pandemic cyclist casualties were concentrated in Midtown and Lower Manhattan. Post-pandemic, they are more broadly distributed across the boroughs. 
+
+
+```python
+# IF NOT PERFORMED ABOVE: Drop rows with missing latitude and longitude values
+# data_geo = data.dropna(subset=['LATITUDE', 'LONGITUDE'])
+
+# IF NOT PERFORMED ABOVE: Drop rows with missing latitude and longitude values
+# data_cyc = data_geo[(data_geo['NUMBER OF CYCLIST KILLED'] > 0) | (data_geo['NUMBER OF CYCLIST INJURED'] > 0)]
+
+# IF NOT PERFORMED ABOVE: Filter rows for desired years
+# data_cyc_22_24 = data_cyc[(data_cyc['CRASH DATE'] >= '2022-01-01') & (data_cyc['CRASH DATE'] <= '2024-12-31')]
+
+# Create a base map
+cycfatality_22_24 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
+
+# Add polygons for cyclist fatalities to map
+for index, row in data_cyc_22_24.iterrows():
+    if row['NUMBER OF CYCLIST KILLED'] > 0:
+      color = "red"
+      folium.features.RegularPolygonMarker(
+          location=[row['LATITUDE'], row['LONGITUDE']],
+          number_of_sides=3,
+          radius=5,
+          gradient = False,
+          color=color,
+          fill=True,
+          fill_color=color
+        ).add_to(cycfatality_22_24)
+
+# Save the map
+cycfatality_22_24.save("cyc_fatalities_2022_2024.html")
+```
