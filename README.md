@@ -73,11 +73,11 @@ annual_cyc['Cyclist Fatality Rate'] = annual_cyc['NUMBER OF CYCLIST KILLED']/ann
 annual_cyc
 ```
 Studying these results, we can observe the following:
-- The _number_ of crashes per year is trending _down_, with a sharp drop in 2020
-- The _number_ of cyclists injured per year has remained relatively _flat_
-- The _number_ of cyclists killed per year has fluctuated. The small number of fatalities makes it difficult to identify a trend
-- The _rate_ of cyclists injured per year jumped in 2020 and generally _increased_ through 2024
-- The _rate_ of cyclists killed per year jumped in 2020 and fluctuated through 2024
+- The _number_ of crashes per year is trending _down_, with a sharp drop in 2020.
+- The _number_ of cyclists injured per year has remained relatively _flat_.
+- The _number_ of cyclists killed per year has fluctuated. The small number of fatalities makes it difficult to identify a trend.
+- The _rate_ of cyclists injured per year jumped in 2020 and generally _increased_ through 2024.
+- The _rate_ of cyclists killed per year jumped in 2020 and fluctuated through 2024.
 
 ![summary of crashes, cyclist injuries, and cyclist fatalities, 2017-2024](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/summay_by_year.png?raw=true "Sumary by Year")
 ## Visualize Number of Crashes and Cyclist Casualties
@@ -229,11 +229,12 @@ for index, row in data_cyc_22_24.iterrows():
 # Save the map
 cyc_casualty_22_24.save("cyc_fatalities_2022_2024.html")
 ```
+![a map of williamsburg showing locations of cyclist injuries and fatalities, using shape and color to differentiate between the types of acciddents](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/casualties_williamsburg.png?raw=true "Williamsburg Cyclist Casualties, 2022-2024")
 
-
+However, we can limit the map to only show cyclist fatalities. As the most serious crashes, these may provide illustrative examples of the factors contributing to higher rates of cyclist casualties.
 ```python
 # Create a base map
-cycfatality_22_24 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
+cyc_fatality_22_24 = folium.Map(location=[40.730610, -73.935242], zoom_start=10)
 
 # Add polygons for cyclist fatalities to map
 for index, row in data_cyc_22_24.iterrows():
@@ -247,8 +248,13 @@ for index, row in data_cyc_22_24.iterrows():
           color=color,
           fill=True,
           fill_color=color
-        ).add_to(cycfatality_22_24)
+        ).add_to(cyc_fatality_22_24)
 
 # Save the map
-cycfatality_22_24.save("cyc_fatalities_2022_2024.html")
+cyc_fatality_22_24.save("cyc_fatalities_2022_2024.html")
 ```
+Examining two of the hotspots--Williamsburg/Long Island City and Downtown Flushing--we can see that many of the fatalities from 2022-2024 appeared near expressways.
+![map of Williamsburg/Long Island City and Downtown Flushing with cyclist fatalities marked](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/fatality_maps.png?raw=true"Williamsbur/LIC and Downtown Flushing Fatalities")
+## Conclusion
+Further research targeting areas where cyclist casualties increased post-pandemic could determine the causes of these crashes and identify solutions. Causes may include traffic volume, vehicle speed, road design, and driver and cyclist behavior. 
+Depending on the causes, the City could implement solutions near expressways such as re-engineering roads, increasing enforcement (including automated traffic enforcement), and building protected cycling infrastructure.
