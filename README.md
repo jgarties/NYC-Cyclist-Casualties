@@ -80,3 +80,71 @@ Studying these results, we can observe the following:
 - The _rate_ of cyclists killed per year jumped in 2020 and fluctuated through 2024
 
 ![summary of crashes, cyclist injuries, and cyclist fatalities, 2017-2024](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/summay_by_year.png?raw=true "Sumary by Year")
+## Plot Crashes and Cyclist Casualties
+We will visualize these results to help make more sense of them.
+First, we will visualize the number of crashes per year, which shows the downward trend we observed.
+```python
+# Plot the number of crashes per year
+plt.figure(figsize=(16, 6)) # Adjust figure size to meet your needs
+sns.barplot(x=annual_cyc.index, y=annual_cyc['Number of Crashes'].values)
+plt.title('Total Crashes per Year', fontsize=16)
+plt.xlabel('Year', fontsize=14)
+plt.ylabel('Number of Crashes', fontsize=14)
+plt.tight_layout()
+
+# plt.savefig("total_crashes_year.svg", format='svg') # Optional: Save the figure
+
+plt.show()
+```
+We will use two combo charts to visualize the trends in the number and rate of cyclists killed and injured. These charts will combine a bar chart of crashes injuring/killing cyclists using the left y-axis with a superimposed line chart of the rate of cyclists injured/killed using the right y-axis.
+
+Cyclist injuries:
+```python
+# Create a figure
+fig, ax1 = plt.subplots(figsize=(16,6)) # Adjust figure size to meet your needs
+
+# Create a barplot for the number of cyclists injured
+sns.barplot(x=annual_cyc.index.astype(str), y=annual_cyc['NUMBER OF CYCLIST INJURED'].values, ax=ax1)
+ax1.set_ylabel('Number of Cyclists Injured', fontsize=14)
+ax1.set_xlabel('Year', fontsize=14)
+
+# Create the secondary y-axis
+ax2 = ax1.twinx()
+
+# Create a lineplot for cyclist injury rate
+sns.lineplot(x=annual_cyc.index.astype(str), y=annual_cyc['Cyclist Injury Rate'].values, ax=ax2, color='red')
+ax2.set_ylabel('Cyclist Injury Rate (all crashes)', fontsize=14)
+
+# Set title and labels
+plt.title('Cyclists Injured in Crashes', fontsize=16)
+
+# plt.savefig("cyc_inj_rate_year.svg", format='svg') # Optional: Save the figure
+
+plt.show()
+```
+Cyclist fatalities:
+```python
+# Create a figure
+fig, ax1 = plt.subplots(figsize=(16, 6)) # Adjust figure size to meet your needs
+
+# Create a barplot for the number of cyclists killed
+sns.barplot(x=annual_cyc.index.astype(str), y=annual_cyc['NUMBER OF CYCLIST KILLED'].values, ax=ax1)
+ax1.set_ylabel('Number of Cyclists Killed', fontsize=14)
+ax1.set_xlabel('Year', fontsize=14)
+
+# Create the secondary y-axis
+ax2 = ax1.twinx()
+
+# Create a lineplot for cyclist injury rate
+sns.lineplot(x=annual_cyc.index.astype(str), y=annual_cyc['Cyclist Fatality Rate'].values, ax=ax2, color='red')
+ax2.set_ylabel('Cyclist Fatality Rate (all crashes)', fontsize=14)
+
+# Set title and labels
+plt.title('Cyclists Killed in Crashes', fontsize=16)
+
+# plt.savefig("cyc_fatality_rate_year.svg", format='svg') # Optional: Save the figure
+plt.show()
+```
+This produes the following two charts:
+
+
