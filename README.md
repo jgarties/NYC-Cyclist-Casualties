@@ -56,11 +56,11 @@ data['CRASH DATE'] = pd.to_datetime(data['CRASH DATE'])
 cyc = data[['CRASH DATE','COLLISION_ID','NUMBER OF CYCLIST INJURED','NUMBER OF CYCLIST KILLED']]
 
 # Group by year to get the number of crashes per year
-annual_cyc = pd.pivot_table(cyc, values=['COLLISION_ID','NUMBER OF CYCLIST INJURED','NUMBER OF CYCLIST KILLED'],
-                                aggfunc={'COLLISION_ID':'size','NUMBER OF CYCLIST INJURED':'sum','NUMBER OF CYCLIST KILLED':'sum'},
-                                index=cyc['CRASH DATE'].dt.to_period("Y"))
-# Rename the COLLISION_ID column, now that it is the sum of the number of rows, i.e., crashes
-annual_cyc = annual_cyc.rename(columns={'COLLISION_ID': 'Number of Crashes'})
+annual_cyc = cyc.groupby(cyc['CRASH DATE'].dt.to_period("Y")).agg({
+    'COLLISION_ID': 'size',
+    'NUMBER OF CYCLIST INJURED': 'sum',
+    'NUMBER OF CYCLIST KILLED': 'sum'
+}).rename(columns={'COLLISION_ID': 'Number of Crashes'})
 
 # Filter the dataframe to only include the years 2017 - 2024
 annual_cyc = annual_cyc[(annual_cyc.index >= '2017') & (annual_cyc.index <= '2024')]
