@@ -1,10 +1,10 @@
 # Analyzing the Changing Distributions of Cyclist Casualties in New York City
 ## Introduction
-I performed this analysis as part of the [Transportation Data Science Project (TDSP)](https://nebigdatahub.org/nsdc/tdsp/), which provides self-paced instruction on the basics of python and data science using a New York City OpenData transportation dataset on car crashes. The project culminates with participants selecting and original research question, conducting data analysis to answer the question, and creating a poster to present their findings.
+I performed this analysis as part of the [Transportation Data Science Project (TDSP)](https://nebigdatahub.org/nsdc/tdsp/), which provides self-paced instruction on the basics of Python and data science using a New York City OpenData transportation dataset on car crashes. The project culminates with participants selecting an original research question, conducting data analysis to answer the question, and creating a poster to present their findings.
 
-I decided to examine cyclist causialties (i.e., injuries and fatalities) before and after the COVID-19 pandemic to identify trends that the pandemic may have caused and recommend actions to address them. This repo contains a [python notebook](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/NYC-Cyclist-Casualties.ipynb) with the code for my analysis and my [research poster](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/Poster_NYC-Cyclist-Casualties_jgarties.pdf). This readme walks through the code.
+I decided to examine cyclist casualties (i.e., injuries and fatalities) before and after the COVID-19 pandemic to identify trends the pandemic may have caused and recommend actions to address them. This repo contains a [Python notebook](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/NYC-Cyclist-Casualties.ipynb) with the code for my analysis and my [research poster](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/Poster_NYC-Cyclist-Casualties_jgarties.pdf). This README walks through the code.
 ## Load Data
-This analysis uses the NYC OpenData Motor Vehicles Collisions - Crashes dataset. Click the Export button on the page to download a csv. 
+This analysis uses the NYC OpenData Motor Vehicles Collisions - Crashes dataset. Click the Export button on the page to download a CSV. 
 
 Once you've downloaded the data, import the libraries we'll be using in the analysis.
 ```python
@@ -28,11 +28,10 @@ data = pd.read_csv('filepath') # Replace filepath with the path to your csv
 # View the column headers and the first five rows of the dataset
 data.head(5)
 ```
-This is my dataset's head. Yours may look different depending on when you downloaded the csv, but the column headers should be the same.
 
 ![dataset head](https://raw.githubusercontent.com/jgarties/NYC-Cyclist-Casualties/refs/heads/main/screenshots/dataset_head.png "Dataset Head")
 ## Check for Missing Values
-A large number of missing values could affect our ability to analyze this data. This code returns a table showing the number of missing values for each column and the percent of the total values the missing values represent.
+A large number of missing values could affect our ability to analyze this data. This code returns a table showing the number of missing values for each column and the percent of total values the missing values represent.
 ```python
 # Find the number of missing values in each column
 missing_values = data.isnull().sum()
@@ -57,11 +56,11 @@ data['CRASH DATE'] = pd.to_datetime(data['CRASH DATE'])
 cyc = data[['CRASH DATE','COLLISION_ID','NUMBER OF CYCLIST INJURED','NUMBER OF CYCLIST KILLED']]
 
 # Group by year to get the number of crashes per year
-annual_cyc = pd.pivot_table(cyc, values=['COLLISION_ID','NUMBER OF CYCLIST INJURED','NUMBER OF CYCLIST KILLED'],
-                                aggfunc={'COLLISION_ID':'size','NUMBER OF CYCLIST INJURED':'sum','NUMBER OF CYCLIST KILLED':'sum'},
-                                index=cyc['CRASH DATE'].dt.to_period("Y"))
-# Rename the COLLISION_ID column, now that it is the sum of the number of rows, i.e., crashes
-annual_cyc = annual_cyc.rename(columns={'COLLISION_ID': 'Number of Crashes'})
+annual_cyc = cyc.groupby(cyc['CRASH DATE'].dt.to_period("Y")).agg({
+    'COLLISION_ID': 'size',
+    'NUMBER OF CYCLIST INJURED': 'sum',
+    'NUMBER OF CYCLIST KILLED': 'sum'
+}).rename(columns={'COLLISION_ID': 'Number of Crashes'})
 
 # Filter the dataframe to only include the years 2017 - 2024
 annual_cyc = annual_cyc[(annual_cyc.index >= '2017') & (annual_cyc.index <= '2024')]
@@ -147,16 +146,16 @@ plt.title('Cyclists Killed in Crashes', fontsize=16)
 # plt.savefig("cyc_fatality_rate_year.svg", format='svg') # Optional: Save the figure
 plt.show()
 ```
-This produes the following two charts:
+This produces the following two charts:
 
 ![combo chart showing the number and rate of cyclists injured, 2014-2017](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/cyclists_injured_combo_chart.png?raw=true "Number and Rate of Cyclists Injured")
 
 ![combo chart showing the number and rate of cyclists killed, 2014-2017](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/cyclists_killed_combo_chart.png?raw=true "Number and Rate of Cyclists Killed")
 
 ## Heatmapping Cyclist Casualties Before and After the Pandemic
-So far, we have seen an increase in the rate of cyclists killed and injured since 2020. This suggests that something about the change in travel patterns since the pandemic has caused a higher rate of cyclist casualties. Did these new travel patters affect _where_ crashes injured and killed cyclists? We can use heatmapping to find out.
+So far, we have seen an increase in the rate of cyclists killed and injured since 2020. This suggests that something about the change in travel patterns since the pandemic has caused a higher rate of cyclist casualties. Did these new travel patterns affect _where_ crashes injured and killed cyclists? We can use heatmapping to find out.
 
-Returning to the full unsummarized dataset, we will create two heatmaps of crashes that killed and injured cyclists: one from 2017-2019, and one from 2022-2024. I selected these timeframes because they each provide three years of data to represent "pre-pandemc" and "post-pandemic" crashes. I omit the years 2020 and 2021 because they represent the greatest periods of pandemic disruption, while 2022 onward best represents the post-pandemic "new normal."
+Returning to the full unsummarized dataset, we will create two heatmaps of crashes that killed and injured cyclists: one from 2017-2019, and one from 2022-2024. I selected these timeframes because they each provide three years of data to represent "pre-pandemic" and "post-pandemic" crashes. I omit the years 2020 and 2021 because they represent the greatest periods of pandemic disruption, while 2022 onward best represents the post-pandemic "new normal."
 
 Heatmap for 2017-2019:
 ```python
@@ -197,8 +196,9 @@ cyc_22_24.save("cyc_heatmap_2022_2024.html")
 ![two heatmaps of cyclist casualties across New York City, one from 2017-2019 and one from 2022-2024](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/heatmaps.png?raw=true "Heatmaps of Cyclist Casualties")
 
 The resulting heatmaps show that pre-pandemic (2017-2019, left) cyclist casualties were concentrated in Midtown and Lower Manhattan. Post-pandemic (2022-2024, right), they are more broadly distributed across the boroughs. Can we use this dataset to learn more about some of the post-pandemic hot spots?
+
 ## Mapping Post-Pandemic Hotspots
-The datast provides the latitude and longitude of crashes, allowing us to map precisely where crashes that injured or killed cyclists occurred to search for insights. However, while heatmapping can help us draw insights from a large amount of data, the sheer number of crashes in our dataset makes it challenging to learn anything from examing all crashes with cyclist casualties.
+The dataset provides the latitude and longitude of crashes, allowing us to map precisely where crashes that injured or killed cyclists occurred to search for insights. However, while heatmapping can help us draw insights from a large amount of data, the sheer number of crashes in our dataset makes it challenging to learn anything from examining all crashes with cyclist casualties.
 
 For example, this map of cyclist casualties from 2022-2024 uses yellow circles to mark the location of crashes that injured cyclists and red triangles to mark the location of crashes that killed cyclists. Even focusing on a small area like Williamsburg shows that there is too much data to gain useful insights.
 ```python
@@ -231,7 +231,7 @@ for index, row in data_cyc_22_24.iterrows():
 # Save the map
 cyc_casualty_22_24.save("cyc_fatalities_2022_2024.html")
 ```
-![a map of williamsburg showing locations of cyclist injuries and fatalities, using shape and color to differentiate between the types of acciddents](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/casualties_williamsburg.png?raw=true "Williamsburg Cyclist Casualties, 2022-2024")
+![a map of williamsburg showing locations of cyclist injuries and fatalities, using shape and color to differentiate between the types of accidents](https://github.com/jgarties/NYC-Cyclist-Casualties/blob/main/screenshots/casualties_williamsburg.png?raw=true "Williamsburg Cyclist Casualties, 2022-2024")
 
 However, we can limit the map to only show cyclist fatalities. As the most serious crashes, these may provide illustrative examples of the factors contributing to higher rates of cyclist casualties.
 ```python
